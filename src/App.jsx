@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import "./App.css";
 
 import { AuthProvider } from "./context/AuthContext";
@@ -17,49 +17,30 @@ import Login from "./pages/Login";
 
 export default function App() {
   const [page, setPage] = useState("home");
+  const [navParams, setNavParams] = useState({});
+  const [navKey, setNavKey] = useState(0);
 
-  // Desktop abierto por defecto
   const [sidebarOpen, setSidebarOpen] = useState(
-    typeof window !== "undefined"
-      ? window.innerWidth > 900
-      : true
+    typeof window !== "undefined" ? window.innerWidth > 900 : true
   );
 
-  const navigate = (p) => {
+  const navigate = useCallback((p, params = {}) => {
     setPage(p);
+    setNavParams(params);
+    setNavKey(k => k + 1);
 
-    // Mobile/tablet → cerrar drawer al navegar
-    if (
-      typeof window !== "undefined" &&
-      window.innerWidth <= 900
-    ) {
+    if (typeof window !== "undefined" && window.innerWidth <= 900) {
       setSidebarOpen(false);
     }
 
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  };
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
-  const pages = {
-    home: <Home navigate={navigate} />,
-    cursos: <Cursos navigate={navigate} />,
-    apuntes: <Apuntes navigate={navigate} />,
-    examenes: <Examenes navigate={navigate} />,
-    docentes: <Docentes navigate={navigate} />,
-    planes: <Planes navigate={navigate} />,
-    login: <Login navigate={navigate} />,
-  };
-
-  // Páginas con sidebar
   const showSidebar = !["home", "login", "planes"].includes(page);
 
   return (
     <AuthProvider>
-
       <div className="app-shell">
-
         <Navbar
           page={page}
           navigate={navigate}
@@ -69,7 +50,6 @@ export default function App() {
         />
 
         <div className="app-body">
-
           <Sidebar
             page={page}
             navigate={navigate}
@@ -78,16 +58,15 @@ export default function App() {
             show={showSidebar}
           />
 
-          <main
-            className={`app-main ${
-              showSidebar && sidebarOpen
-                ? "sidebar-open"
-                : ""
-            }`}
-          >
-            {pages[page] ?? pages.home}
+          <main className={`app-main ${showSidebar && sidebarOpen ? "sidebar-open" : ""}`}>
+            {page === "home"     && <Home     key={navKey} navigate={navigate} />}
+            {page === "cursos"   && <Cursos   key={navKey} navigate={navigate} />}
+            {page === "apuntes"  && <Apuntes  key={navKey} navigate={navigate} initialFilter={navParams} />}
+            {page === "examenes" && <Examenes key={navKey} navigate={navigate} initialFilter={navParams} />}
+            {page === "docentes" && <Docentes key={navKey} navigate={navigate} />}
+            {page === "planes"   && <Planes   key={navKey} navigate={navigate} />}
+            {page === "login"    && <Login    key={navKey} navigate={navigate} />}
           </main>
-
         </div>
 
         <Footer
@@ -95,9 +74,7 @@ export default function App() {
           sidebarOpen={sidebarOpen}
           showSidebar={showSidebar}
         />
-
       </div>
-
     </AuthProvider>
   );
 }

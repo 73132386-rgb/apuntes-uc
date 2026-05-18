@@ -3,28 +3,32 @@ import { cursos, docentes, carreras, facultades } from "../data/mockData";
 import { Badge } from "../components/ui/Badge";
 
 export default function Cursos({ navigate }) {
-  const [search, setSearch]         = useState("");
+  const [search, setSearch]               = useState("");
   const [carreraFilter, setCarreraFilter] = useState("all");
   const [cicloFilter, setCicloFilter]     = useState("all");
   const [facultadFilter, setFacultadFilter] = useState("all");
 
-  /* carreras disponibles filtradas por facultad */
   const carrerasDisp = useMemo(() => {
-    if (facultadFilter === "all") return [...new Set(cursos.map((c) => c.carreraId))].map((id) => carreras.find((c) => c.id === id)).filter(Boolean);
+    if (facultadFilter === "all")
+      return [...new Set(cursos.map((c) => c.carreraId))]
+        .map((id) => carreras.find((c) => c.id === id))
+        .filter(Boolean);
     return carreras.filter((c) => String(c.facultadId) === facultadFilter);
   }, [facultadFilter]);
 
-  const filtered = useMemo(() => cursos.filter((c) => {
-    const q = search.toLowerCase();
-    const matchSearch = c.nombre.toLowerCase().includes(q) || c.codigo.toLowerCase().includes(q);
-    const matchCarrera = carreraFilter === "all" || String(c.carreraId) === carreraFilter;
-    const matchCiclo   = cicloFilter   === "all" || String(c.ciclo)    === cicloFilter;
-    const matchFac     = facultadFilter === "all" || (() => {
-      const car = carreras.find((cr) => cr.id === c.carreraId);
-      return car ? String(car.facultadId) === facultadFilter : false;
-    })();
-    return matchSearch && matchCarrera && matchCiclo && matchFac;
-  }), [search, carreraFilter, cicloFilter, facultadFilter]);
+  const filtered = useMemo(() =>
+    cursos.filter((c) => {
+      const q = search.toLowerCase();
+      const matchSearch  = c.nombre.toLowerCase().includes(q) || c.codigo.toLowerCase().includes(q);
+      const matchCarrera = carreraFilter === "all" || String(c.carreraId) === carreraFilter;
+      const matchCiclo   = cicloFilter   === "all" || String(c.ciclo)    === cicloFilter;
+      const matchFac     = facultadFilter === "all" || (() => {
+        const car = carreras.find((cr) => cr.id === c.carreraId);
+        return car ? String(car.facultadId) === facultadFilter : false;
+      })();
+      return matchSearch && matchCarrera && matchCiclo && matchFac;
+    }),
+  [search, carreraFilter, cicloFilter, facultadFilter]);
 
   const resetFilters = () => {
     setSearch(""); setCarreraFilter("all"); setCicloFilter("all"); setFacultadFilter("all");
@@ -56,17 +60,9 @@ export default function Cursos({ navigate }) {
         }
         .cur-count span { color: var(--indigo-light); font-weight: 800; }
 
-        /* filter bar */
-        .cur-filters {
-          display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap;
-        }
-        .cur-search-wrap {
-          position: relative; flex: 1; min-width: 200px;
-        }
-        .cur-search-icon {
-          position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
-          font-size: 0.9rem; pointer-events: none;
-        }
+        .cur-filters { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+        .cur-search-wrap { position: relative; flex: 1; min-width: 200px; }
+        .cur-search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 0.9rem; pointer-events: none; }
         .cur-search {
           width: 100%; background: var(--bg-card); border: 1px solid var(--border);
           border-radius: 11px; padding: 10px 14px 10px 36px;
@@ -87,33 +83,24 @@ export default function Cursos({ navigate }) {
           background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25);
           border-radius: 11px; padding: 10px 14px;
           color: #ef4444; font-size: 0.82rem; font-weight: 600;
-          font-family: var(--font-body); cursor: pointer; white-space: nowrap;
-          transition: all 0.15s;
+          font-family: var(--font-body); cursor: pointer; white-space: nowrap; transition: all 0.15s;
         }
         .cur-reset:hover { background: rgba(239,68,68,0.14); }
 
-        /* chips */
         .cur-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 28px; }
         .cur-chip {
           background: var(--bg-card); border: 1px solid var(--border);
           border-radius: 100px; padding: 5px 14px;
           font-size: 0.78rem; font-weight: 500; color: var(--text-muted);
-          cursor: pointer; font-family: var(--font-body);
-          transition: all 0.15s; white-space: nowrap;
+          cursor: pointer; font-family: var(--font-body); transition: all 0.15s; white-space: nowrap;
           display: flex; align-items: center; gap: 6px;
         }
         .cur-chip:hover { background: var(--bg-elevated); color: var(--text-secondary); }
-        .cur-chip.active {
-          background: var(--indigo-dim); border-color: rgba(99,102,241,0.4); color: var(--indigo-light);
-        }
+        .cur-chip.active { background: var(--indigo-dim); border-color: rgba(99,102,241,0.4); color: var(--indigo-light); }
         .cur-chip-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
 
-        /* grid */
-        .cur-grid {
-          display: grid; grid-template-columns: repeat(auto-fill, minmax(288px, 1fr)); gap: 20px;
-        }
+        .cur-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(288px, 1fr)); gap: 20px; }
 
-        /* card */
         .cur-card {
           background: var(--bg-card); border: 1px solid var(--border);
           border-radius: 16px; padding: 20px;
@@ -127,14 +114,8 @@ export default function Cursos({ navigate }) {
           from { opacity:0; transform:scale(0.97) translateY(8px); }
           to   { opacity:1; transform:none; }
         }
-        .cur-card:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 12px 32px rgba(0,0,0,0.22);
-        }
-        .cur-card-top {
-          display: flex; justify-content: space-between;
-          align-items: flex-start; margin-bottom: 14px;
-        }
+        .cur-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.22); }
+        .cur-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
         .cur-code {
           font-size: 0.7rem; font-weight: 800; letter-spacing: 0.07em;
           border-radius: 7px; padding: 3px 9px; font-family: var(--font-display);
@@ -149,18 +130,13 @@ export default function Cursos({ navigate }) {
           font-size: 0.98rem; line-height: 1.3; margin-bottom: 6px; color: var(--text-primary);
         }
         .cur-carrera { color: var(--text-muted); font-size: 0.78rem; margin-bottom: 14px; }
-        .cur-meta {
-          display: flex; align-items: center; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;
-        }
+        .cur-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
         .cur-ciclo {
           background: var(--bg-elevated); border: 1px solid var(--border);
           border-radius: 100px; padding: 2px 10px;
           font-size: 0.7rem; font-weight: 700; color: var(--text-secondary);
         }
-        .cur-docente {
-          display: flex; align-items: center; gap: 6px;
-          font-size: 0.76rem; color: var(--text-muted);
-        }
+        .cur-docente { display: flex; align-items: center; gap: 6px; font-size: 0.76rem; color: var(--text-muted); }
         .cur-doc-av {
           width: 20px; height: 20px; border-radius: 50%;
           background: linear-gradient(135deg, #4f46e5, #7c3aed);
@@ -172,12 +148,10 @@ export default function Cursos({ navigate }) {
           flex: 1; background: var(--bg-elevated); border: 1px solid var(--border);
           border-radius: 9px; padding: 8px 4px;
           font-size: 0.76rem; font-weight: 600; color: var(--text-secondary);
-          cursor: pointer; font-family: var(--font-body);
-          transition: all 0.15s; text-align: center;
+          cursor: pointer; font-family: var(--font-body); transition: all 0.15s; text-align: center;
         }
         .cur-action-btn:hover { background: var(--indigo-dim); color: var(--indigo-light); border-color: rgba(99,102,241,0.35); }
 
-        /* empty */
         .cur-empty {
           text-align: center; padding: 80px 24px; color: var(--text-muted);
           display: flex; flex-direction: column; gap: 12px; align-items: center;
@@ -193,7 +167,6 @@ export default function Cursos({ navigate }) {
       `}</style>
 
       <div className="cur-page page-container">
-        {/* Header */}
         <div className="cur-header">
           <div>
             <h1 className="cur-title">Cursos</h1>
@@ -202,7 +175,6 @@ export default function Cursos({ navigate }) {
           <span className="cur-count"><span>{filtered.length}</span> resultados</span>
         </div>
 
-        {/* Filters */}
         <div className="cur-filters">
           <div className="cur-search-wrap">
             <span className="cur-search-icon">🔍</span>
@@ -248,7 +220,6 @@ export default function Cursos({ navigate }) {
           )}
         </div>
 
-        {/* Carrera chips */}
         <div className="cur-chips">
           <button
             className={`cur-chip${carreraFilter === "all" ? " active" : ""}`}
@@ -268,7 +239,6 @@ export default function Cursos({ navigate }) {
           ))}
         </div>
 
-        {/* Grid */}
         {filtered.length === 0 ? (
           <div className="cur-empty">
             <div className="cur-empty-icon">🔍</div>
@@ -306,12 +276,21 @@ function CursoCard({ curso, docente, carrera, navigate, delay }) {
     <div
       className="cur-card"
       style={{ borderTopColor: curso.color, animationDelay: `${delay}s` }}
-      onClick={() => navigate("examenes")}
-      onMouseEnter={(e) => { e.currentTarget.style.borderColor = `${curso.color}55`; e.currentTarget.style.borderTopColor = curso.color; }}
-      onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.borderTopColor = curso.color; }}
+      onClick={() => navigate("examenes", { carreraId: String(curso.carreraId) })}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.borderColor = `${curso.color}55`;
+        e.currentTarget.style.borderTopColor = curso.color;
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.borderColor = "var(--border)";
+        e.currentTarget.style.borderTopColor = curso.color;
+      }}
     >
       <div className="cur-card-top">
-        <span className="cur-code" style={{ background: `${curso.color}20`, color: curso.color, border: `1px solid ${curso.color}40` }}>
+        <span
+          className="cur-code"
+          style={{ background: `${curso.color}20`, color: curso.color, border: `1px solid ${curso.color}40` }}
+        >
           {curso.codigo}
         </span>
         <span className="cur-creds">{curso.creditos} cr.</span>
@@ -331,10 +310,22 @@ function CursoCard({ curso, docente, carrera, navigate, delay }) {
       </div>
 
       <div className="cur-actions">
-        <button className="cur-action-btn" onClick={(e) => { e.stopPropagation(); navigate("apuntes"); }}>
+        <button
+          className="cur-action-btn"
+          onClick={(e) => {
+            e.stopPropagation();
+            navigate("apuntes", { carreraId: String(curso.carreraId) });
+          }}
+        >
           📝 Apuntes
         </button>
-        <button className="cur-action-btn" onClick={(e) => { e.stopPropagation(); navigate("examenes"); }}>
+        <button
+          className="cur-action-btn"
+          onClick={(e) => {
+            e.stopPropagation();
+            navigate("examenes", { carreraId: String(curso.carreraId) });
+          }}
+        >
           📋 Exámenes
         </button>
       </div>

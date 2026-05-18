@@ -8,26 +8,20 @@ import { Modal } from "../components/ui/Modal";
 import { useAuth } from "../context/AuthContext";
 import SubirApunteModal from "../components/modals/SubirApunteModal";
 
-// ─── Constantes ──────────────────────────────────────────────────
 const TIPOS = ["Todos", "Resumen", "Guía", "Apunte", "Mapa", "Esquema", "Código"];
 
 const TIPO_ICON = {
-  Resumen: "📄",
-  Mapa: "🗺️",
-  Guía: "📘",
-  Apunte: "📝",
-  Esquema: "📊",
-  Código: "💻",
+  Resumen: "📄", Mapa: "🗺️", Guía: "📘",
+  Apunte: "📝", Esquema: "📊", Código: "💻",
 };
 
 const SORT_OPTIONS = [
-  { value: "fecha", label: "Más recientes" },
+  { value: "fecha",     label: "Más recientes" },
   { value: "descargas", label: "Más descargados" },
-  { value: "likes", label: "Más valorados" },
-  { value: "vistas", label: "Más vistos" },
+  { value: "likes",     label: "Más valorados" },
+  { value: "vistas",    label: "Más vistos" },
 ];
 
-// ─── Toast demo ──────────────────────────────────────────────────
 function DemoToast({ msg, onDone }) {
   useEffect(() => {
     const t = setTimeout(onDone, 3000);
@@ -35,116 +29,56 @@ function DemoToast({ msg, onDone }) {
   }, [onDone]);
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        bottom: 24,
-        left: "50%",
-        transform: "translateX(-50%)",
-        background: "var(--bg-elevated)",
-        border: "1px solid var(--border)",
-        borderRadius: 12,
-        padding: "11px 20px",
-        zIndex: 10000,
-        fontSize: "0.82rem",
-        color: "var(--text-secondary)",
-        fontWeight: 600,
-        boxShadow: "0 8px 28px rgba(0,0,0,0.35)",
-        display: "flex",
-        alignItems: "center",
-        gap: 8,
-      }}
-    >
-      <span>🔒</span>
-      {msg}
+    <div style={{
+      position: "fixed", bottom: 24, left: "50%", transform: "translateX(-50%)",
+      background: "var(--bg-elevated)", border: "1px solid var(--border)",
+      borderRadius: 12, padding: "11px 20px", zIndex: 10000,
+      fontSize: "0.82rem", color: "var(--text-secondary)", fontWeight: 600,
+      boxShadow: "0 8px 28px rgba(0,0,0,0.35)", display: "flex", alignItems: "center", gap: 8,
+    }}>
+      <span>🔒</span>{msg}
     </div>
   );
 }
 
-// ─── Archivo Row ─────────────────────────────────────────────────
 function ArchivoRow({ archivo }) {
   const info = ARCHIVO_TIPOS[archivo.tipo] || ARCHIVO_TIPOS.pdf;
-
   const detalle = archivo.paginas
     ? `${archivo.paginas} págs.`
-    : archivo.diapositivas
-    ? `${archivo.diapositivas} slides`
-    : archivo.hojas
-    ? `${archivo.hojas} hojas`
-    : archivo.archivos
-    ? `${archivo.archivos} archivos`
+    : archivo.diapositivas ? `${archivo.diapositivas} slides`
+    : archivo.hojas        ? `${archivo.hojas} hojas`
+    : archivo.archivos     ? `${archivo.archivos} archivos`
     : archivo.dimensiones ?? "";
-
   const tieneUrl = !!archivo.url;
-  return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: 10,
-        background: "var(--bg-elevated)",
-        border: "1px solid var(--border)",
-        borderRadius: 11,
-        padding: "9px 13px",
-      }}
-    >
-      <span
-        style={{
-          width: 34,
-          height: 34,
-          borderRadius: 8,
-          flexShrink: 0,
-          background: info.bg,
-          border: `1px solid ${info.border}`,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: "1rem",
-        }}
-      >
-        {info.icon}
-      </span>
 
+  return (
+    <div style={{
+      display: "flex", alignItems: "center", gap: 10,
+      background: "var(--bg-elevated)", border: "1px solid var(--border)",
+      borderRadius: 11, padding: "9px 13px",
+    }}>
+      <span style={{
+        width: 34, height: 34, borderRadius: 8, flexShrink: 0,
+        background: info.bg, border: `1px solid ${info.border}`,
+        display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1rem",
+      }}>{info.icon}</span>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div
-          style={{
-            fontSize: "0.8rem",
-            fontWeight: 600,
-            color: "var(--text-primary)",
-          }}
-        >
+        <div style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--text-primary)" }}>
           {archivo.nombre}
         </div>
-
-        <div
-          style={{
-            fontSize: "0.7rem",
-            color: "var(--text-muted)",
-            marginTop: 1,
-          }}
-        >
-          {info.label} · {archivo.tamaño}
-          {detalle ? ` · ${detalle}` : ""}
+        <div style={{ fontSize: "0.7rem", color: "var(--text-muted)", marginTop: 1 }}>
+          {info.label} · {archivo.tamaño}{detalle ? ` · ${detalle}` : ""}
         </div>
       </div>
-
       <button
         onClick={() => handleArchivoClick(archivo)}
         style={{
           flexShrink: 0,
           background: tieneUrl ? "var(--indigo-dim)" : "var(--bg-card)",
-          border: `1px solid ${
-            tieneUrl
-              ? "rgba(99,102,241,0.35)"
-              : "var(--border)"
-          }`,
-          borderRadius: 7,
-          padding: "4px 10px",
-          color: tieneUrl
-            ? "var(--indigo-light)"
-            : "var(--text-muted)",
-          fontSize: "0.7rem",
-          fontWeight: 700,
+          border: `1px solid ${tieneUrl ? "rgba(99,102,241,0.35)" : "var(--border)"}`,
+          borderRadius: 7, padding: "4px 10px",
+          color: tieneUrl ? "var(--indigo-light)" : "var(--text-muted)",
+          fontSize: "0.7rem", fontWeight: 700,
           cursor: tieneUrl ? "pointer" : "not-allowed",
         }}
       >
@@ -154,70 +88,56 @@ function ArchivoRow({ archivo }) {
   );
 }
 
-// ─── Card de apunte ──────────────────────────────────────────────
 function ApunteCard({ ap, curso, docente, onOpen, delay }) {
-  const facultad = curso ? facultades.find(f => f.id === carreras.find(c => c.id === curso.carreraId)?.facultadId) : null;
+  const facultad = curso
+    ? facultades.find(f => f.id === carreras.find(c => c.id === curso.carreraId)?.facultadId)
+    : null;
 
   return (
-    <div
-      className="ap-card"
-      style={{ animationDelay:`${delay}s` }}
-      onClick={onOpen}
-    >
+    <div className="ap-card" style={{ animationDelay: `${delay}s` }} onClick={onOpen}>
       {ap.previewImg && (
         <div className="ap-card-img-wrap">
           <img src={ap.previewImg} alt={ap.titulo} className="ap-card-img" loading="lazy" />
           <div className="ap-card-img-overlay" />
-          {/* Ciclo badge sobre imagen */}
-          {curso && (
-            <span className="ap-card-ciclo-badge">Ciclo {curso.ciclo}</span>
-          )}
-          {ap.premium && (
-            <span className="ap-card-premium-img-badge">⭐ PRO</span>
-          )}
+          {curso && <span className="ap-card-ciclo-badge">Ciclo {curso.ciclo}</span>}
+          {ap.premium && <span className="ap-card-premium-img-badge">⭐ PRO</span>}
         </div>
       )}
-
       <div className="ap-card-body">
         <div className="ap-card-top">
-          <div style={{ display:"flex", alignItems:"center", gap:5 }}>
-            <span style={{ fontSize:"0.88rem" }}>{TIPO_ICON[ap.tipo] || "📄"}</span>
+          <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+            <span style={{ fontSize: "0.88rem" }}>{TIPO_ICON[ap.tipo] || "📄"}</span>
             <span className="ap-tipo-lbl">{ap.tipo}</span>
           </div>
           {facultad && (
-            <span className="ap-fac-chip" style={{ background:`${facultad.color}18`, color:facultad.color, borderColor:`${facultad.color}35` }}>
+            <span className="ap-fac-chip" style={{ background: `${facultad.color}18`, color: facultad.color, borderColor: `${facultad.color}35` }}>
               {facultad.icono}
             </span>
           )}
         </div>
-
         <h3 className="ap-titulo">{ap.titulo}</h3>
-
         {curso && (
           <div className="ap-curso-row">
-            <span className="ap-curso-dot" style={{ background:curso.color }} />
+            <span className="ap-curso-dot" style={{ background: curso.color }} />
             <span className="ap-curso-name">{curso.nombre}</span>
           </div>
         )}
-
         {docente && (
           <div className="ap-docente-row">
             <span className="ap-doc-av">{docente.iniciales}</span>
-            <span className="ap-doc-name">{docente.nombre.split(" ").slice(0,3).join(" ")}</span>
+            <span className="ap-doc-name">{docente.nombre.split(" ").slice(0, 3).join(" ")}</span>
           </div>
         )}
-
         {ap.temas?.length > 0 && (
           <div className="ap-temas-preview">
-            {ap.temas.slice(0,2).map(t => (
+            {ap.temas.slice(0, 2).map(t => (
               <span key={t} className="ap-tema-mini">{t}</span>
             ))}
             {ap.temas.length > 2 && (
-              <span className="ap-tema-mini ap-tema-more">+{ap.temas.length-2}</span>
+              <span className="ap-tema-mini ap-tema-more">+{ap.temas.length - 2}</span>
             )}
           </div>
         )}
-
         <div className="ap-meta">
           <span>⬇️ {ap.descargas.toLocaleString()}</span>
           <span>❤️ {ap.likes}</span>
@@ -225,10 +145,9 @@ function ApunteCard({ ap, curso, docente, onOpen, delay }) {
           <span className="ap-meta-date">{ap.fecha}</span>
         </div>
       </div>
-
       {ap.premium && (
         <div className="ap-lock-overlay">
-          <span style={{ fontSize:"1.4rem", marginBottom:4 }}>🔒</span>
+          <span style={{ fontSize: "1.4rem", marginBottom: 4 }}>🔒</span>
           <span className="ap-lock-text">Solo Premium</span>
         </div>
       )}
@@ -236,70 +155,71 @@ function ApunteCard({ ap, curso, docente, onOpen, delay }) {
   );
 }
 
-// ─── Página principal ────────────────────────────────────────────
-export default function Apuntes({ navigate }) {
+export default function Apuntes({ navigate, initialFilter = {} }) {
   const { user } = useAuth();
 
-  const [openModal, setOpenModal] = useState(false);
-  const [search, setSearch]             = useState("");
-  const [tipoFilter, setTipoFilter]     = useState("Todos");
-  const [facultadFilter, setFacultad]   = useState("all");
-  const [carreraFilter, setCarrera]     = useState("all");
-  const [cicloFilter, setCiclo]         = useState("all");
-  const [soloGratis, setSoloGratis]     = useState(false);
-  const [sortBy, setSortBy]             = useState("fecha");
-  const [modalApunte, setModalApunte]   = useState(null);
-  const [toast, setToast]               = useState(null);
-  const [viewMode, setViewMode]         = useState("grid"); // grid | list
+  const [openModal, setOpenModal]     = useState(false);
+  const [search, setSearch]           = useState("");
+  // Si viene tipo desde Home (ej. "Resumen"), lo mapeamos; si no, "Todos"
+  const [tipoFilter, setTipoFilter]   = useState(
+    initialFilter.tipo && TIPOS.includes(initialFilter.tipo) ? initialFilter.tipo : "Todos"
+  );
+  const [facultadFilter, setFacultad] = useState("all");
+  const [carreraFilter, setCarrera]   = useState(initialFilter.carreraId ?? "all");
+  const [docenteFilter, setDocente]   = useState(initialFilter.docenteId ?? "all");
+  const [cursoFilter, setCurso]       = useState(initialFilter.cursoId ?? "all");
+  const [cicloFilter, setCiclo]       = useState("all");
+  const [soloGratis, setSoloGratis]   = useState(false);
+  const [sortBy, setSortBy]           = useState("fecha");
+  const [modalApunte, setModalApunte] = useState(null);
+  const [toast, setToast]             = useState(null);
+  const [viewMode, setViewMode]       = useState("grid");
 
-  // Escuchar evento demo-no-url
   useEffect(() => {
     const h = e => setToast(e.detail.nombre);
     window.addEventListener("demo-no-url", h);
     return () => window.removeEventListener("demo-no-url", h);
   }, []);
 
-  // Carreras filtradas por facultad seleccionada
   const carrerasFiltradas = useMemo(() =>
     facultadFilter === "all"
       ? carreras
       : carreras.filter(c => c.facultadId === Number(facultadFilter)),
   [facultadFilter]);
 
-  // Ciclos disponibles en los cursos del mockData
   const ciclosDisponibles = useMemo(() => {
     const set = new Set(cursos.map(c => c.ciclo));
-    return [...set].sort((a,b) => a-b);
+    return [...set].sort((a, b) => a - b);
   }, []);
 
-  // Filtrado + ordenado
   const filtered = useMemo(() => {
     let list = apuntes.filter(a => {
-      const curso = cursos.find(c => c.id === a.cursoId);
+      const curso   = cursos.find(c => c.id === a.cursoId);
       const carrera = curso ? carreras.find(c => c.id === curso.carreraId) : null;
 
       const matchSearch   = a.titulo.toLowerCase().includes(search.toLowerCase())
                          || a.temas?.some(t => t.toLowerCase().includes(search.toLowerCase()))
                          || (curso?.nombre.toLowerCase().includes(search.toLowerCase()));
       const matchTipo     = tipoFilter === "Todos" || a.tipo === tipoFilter;
+      const matchCurso    = cursoFilter === "all" || String(a.cursoId) === cursoFilter;
       const matchFacultad = facultadFilter === "all" || (carrera && carrera.facultadId === Number(facultadFilter));
       const matchCarrera  = carreraFilter === "all" || (curso && String(curso.carreraId) === carreraFilter);
       const matchCiclo    = cicloFilter === "all" || (curso && String(curso.ciclo) === cicloFilter);
       const matchGratis   = !soloGratis || !a.premium;
+      const matchDocente  = docenteFilter === "all" || String(a.docenteId) === docenteFilter;
 
-      return matchSearch && matchTipo && matchFacultad && matchCarrera && matchCiclo && matchGratis;
+      return matchSearch && matchTipo && matchCurso && matchFacultad && matchCarrera && matchCiclo && matchGratis && matchDocente;
     });
 
-    // Ordenar
-    list = [...list].sort((a,b) => {
+    list = [...list].sort((a, b) => {
       if (sortBy === "fecha")     return b.fecha.localeCompare(a.fecha);
       if (sortBy === "descargas") return b.descargas - a.descargas;
       if (sortBy === "likes")     return b.likes - a.likes;
-      if (sortBy === "vistas")    return (b.vistas||0) - (a.vistas||0);
+      if (sortBy === "vistas")    return (b.vistas || 0) - (a.vistas || 0);
       return 0;
     });
     return list;
-  }, [search, tipoFilter, facultadFilter, carreraFilter, cicloFilter, soloGratis, sortBy]);
+  }, [search, tipoFilter, cursoFilter, facultadFilter, carreraFilter, cicloFilter, soloGratis, sortBy, docenteFilter]);
 
   const countByTipo = useMemo(() => {
     const m = {};
@@ -307,10 +227,14 @@ export default function Apuntes({ navigate }) {
     return m;
   }, []);
 
-  const hasFilter = search || tipoFilter !== "Todos" || facultadFilter !== "all" || carreraFilter !== "all" || cicloFilter !== "all" || soloGratis;
+  const hasFilter = search || tipoFilter !== "Todos" || facultadFilter !== "all"
+    || carreraFilter !== "all" || cursoFilter !== "all" || cicloFilter !== "all"
+    || soloGratis || docenteFilter !== "all";
+
   const reset = useCallback(() => {
     setSearch(""); setTipoFilter("Todos"); setFacultad("all");
-    setCarrera("all"); setCiclo("all"); setSoloGratis(false);
+    setCarrera("all"); setCurso("all"); setCiclo("all");
+    setSoloGratis(false); setDocente("all");
   }, []);
 
   const modalCurso   = modalApunte ? cursos.find(c => c.id === modalApunte.cursoId) : null;
@@ -322,12 +246,10 @@ export default function Apuntes({ navigate }) {
   return (
     <>
       <style>{`
-        /* ── Animaciones ── */
         .ap-page { animation: ap-in 0.35s ease both; }
         @keyframes ap-in { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
         @keyframes ap-card-in { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
 
-        /* ── Header ── */
         .ap-header {
           display:flex; align-items:flex-start; justify-content:space-between;
           gap:16px; margin-bottom:28px; flex-wrap:wrap;
@@ -348,10 +270,7 @@ export default function Apuntes({ navigate }) {
         }
         .ap-upload-btn:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(5,150,105,0.4); }
 
-        /* ── Stats bar ── */
-        .ap-stats-bar {
-          display:flex; gap:10px; flex-wrap:wrap; margin-bottom:24px;
-        }
+        .ap-stats-bar { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:24px; }
         .ap-stat-chip {
           display:flex; align-items:center; gap:6px;
           background:var(--bg-card); border:1px solid var(--border);
@@ -360,7 +279,6 @@ export default function Apuntes({ navigate }) {
         }
         .ap-stat-chip span { font-weight:800; color:var(--text-primary); }
 
-        /* ── Filtros ── */
         .ap-filters-wrap {
           background:var(--bg-card); border:1px solid var(--border);
           border-radius:16px; padding:16px 18px; margin-bottom:20px;
@@ -401,7 +319,6 @@ export default function Apuntes({ navigate }) {
         }
         .ap-reset:hover { background:rgba(239,68,68,0.14); }
 
-        /* ── Facultad chips ── */
         .ap-fac-row { display:flex; gap:7px; flex-wrap:wrap; }
         .ap-fac-btn {
           display:flex; align-items:center; gap:5px;
@@ -413,7 +330,20 @@ export default function Apuntes({ navigate }) {
         .ap-fac-btn.active { color:#fff; border-color:transparent; }
         .ap-fac-btn:hover:not(.active) { background:var(--bg-card); color:var(--text-secondary); }
 
-        /* ── Tipo pills ── */
+        .ap-active-filter-banner {
+          display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+          background:var(--indigo-dim); border:1px solid rgba(99,102,241,0.3);
+          border-radius:12px; padding:10px 16px; margin-bottom:16px;
+          font-size:0.82rem; color:var(--indigo-light);
+        }
+        .ap-active-filter-banner strong { color:var(--indigo-light); }
+        .ap-clear-filter-btn {
+          background:rgba(99,102,241,0.2); border:1px solid rgba(99,102,241,0.35);
+          border-radius:7px; padding:3px 10px; font-size:0.76rem; font-weight:700;
+          color:var(--indigo-light); cursor:pointer; font-family:var(--font-body);
+          margin-left:auto; white-space:nowrap;
+        }
+
         .ap-pills { display:flex; gap:7px; flex-wrap:wrap; margin-bottom:20px; }
         .ap-pill {
           background:var(--bg-card); border:1px solid var(--border);
@@ -430,17 +360,13 @@ export default function Apuntes({ navigate }) {
         }
         .ap-pill:not(.active) .ap-pill-count { background:var(--bg-elevated); color:var(--text-muted); }
 
-        /* ── Result / toolbar ── */
-        .ap-toolbar {
-          display:flex; align-items:center; gap:10px; margin-bottom:20px; flex-wrap:wrap;
-        }
+        .ap-toolbar { display:flex; align-items:center; gap:10px; margin-bottom:20px; flex-wrap:wrap; }
         .ap-result-count { font-size:0.82rem; color:var(--text-muted); flex:1; }
         .ap-result-count strong { color:var(--text-secondary); }
         .ap-sort-select {
           background:var(--bg-card); border:1px solid var(--border);
           border-radius:9px; padding:6px 12px;
-          color:var(--text-secondary); font-size:0.8rem; font-family:var(--font-body);
-          outline:none; cursor:pointer;
+          color:var(--text-secondary); font-size:0.8rem; font-family:var(--font-body); outline:none; cursor:pointer;
         }
         .ap-view-btns { display:flex; gap:4px; }
         .ap-view-btn {
@@ -450,10 +376,8 @@ export default function Apuntes({ navigate }) {
         }
         .ap-view-btn.active { background:var(--indigo-dim); border-color:rgba(99,102,241,0.35); color:var(--indigo-light); }
 
-        /* ── Grid ── */
         .ap-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(268px,1fr)); gap:18px; }
 
-        /* ── List ── */
         .ap-list { display:flex; flex-direction:column; gap:10px; }
         .ap-list-row {
           display:flex; gap:14px; align-items:center;
@@ -471,7 +395,6 @@ export default function Apuntes({ navigate }) {
         .ap-list-stats { display:flex; gap:12px; font-size:0.78rem; color:var(--text-muted); flex-shrink:0; }
         .ap-list-badge { display:flex; gap:6px; flex-shrink:0; }
 
-        /* ── Card ── */
         .ap-card {
           background:var(--bg-card); border:1px solid var(--border);
           border-radius:16px; cursor:pointer;
@@ -487,23 +410,18 @@ export default function Apuntes({ navigate }) {
         .ap-card-ciclo-badge {
           position:absolute; bottom:8px; left:10px;
           background:rgba(0,0,0,0.55); backdrop-filter:blur(6px);
-          border:1px solid rgba(255,255,255,0.12);
-          border-radius:100px; padding:2px 9px;
+          border:1px solid rgba(255,255,255,0.12); border-radius:100px; padding:2px 9px;
           font-size:0.68rem; font-weight:700; color:rgba(255,255,255,0.85);
         }
         .ap-card-premium-img-badge {
           position:absolute; top:8px; right:8px;
           background:rgba(245,158,11,0.85); backdrop-filter:blur(6px);
-          border-radius:100px; padding:2px 9px;
-          font-size:0.68rem; font-weight:800; color:#fff;
+          border-radius:100px; padding:2px 9px; font-size:0.68rem; font-weight:800; color:#fff;
         }
         .ap-card-body { padding:14px 16px 16px; display:flex; flex-direction:column; flex:1; }
         .ap-card-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:9px; }
         .ap-tipo-lbl { font-size:0.68rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.07em; }
-        .ap-fac-chip {
-          font-size:0.72rem; font-weight:700; border-radius:7px; padding:2px 8px;
-          border:1px solid; white-space:nowrap;
-        }
+        .ap-fac-chip { font-size:0.72rem; font-weight:700; border-radius:7px; padding:2px 8px; border:1px solid; white-space:nowrap; }
         .ap-titulo { font-family:var(--font-display); font-weight:700; font-size:0.9rem; line-height:1.4; margin-bottom:9px; color:var(--text-primary); }
         .ap-curso-row { display:flex; align-items:center; gap:7px; margin-bottom:7px; }
         .ap-curso-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
@@ -519,14 +437,10 @@ export default function Apuntes({ navigate }) {
         .ap-temas-preview { display:flex; gap:5px; flex-wrap:wrap; margin-bottom:10px; }
         .ap-tema-mini {
           background:var(--bg-elevated); border:1px solid var(--border);
-          border-radius:100px; padding:2px 8px;
-          font-size:0.66rem; color:var(--text-muted); font-weight:500;
+          border-radius:100px; padding:2px 8px; font-size:0.66rem; color:var(--text-muted); font-weight:500;
         }
         .ap-tema-more { background:var(--indigo-dim); color:var(--indigo-light); border-color:rgba(99,102,241,0.3); }
-        .ap-meta {
-          display:flex; gap:10px; font-size:0.76rem;
-          color:var(--text-muted); margin-top:auto; align-items:center;
-        }
+        .ap-meta { display:flex; gap:10px; font-size:0.76rem; color:var(--text-muted); margin-top:auto; align-items:center; }
         .ap-meta-date { margin-left:auto; font-size:0.68rem; }
         .ap-lock-overlay {
           position:absolute; inset:0;
@@ -537,10 +451,8 @@ export default function Apuntes({ navigate }) {
         .ap-card:hover .ap-lock-overlay { opacity:1; }
         .ap-lock-text { font-size:0.8rem; font-weight:700; color:#fff; text-align:center; }
 
-        /* ── Empty ── */
         .ap-empty { text-align:center; padding:80px 24px; color:var(--text-muted); display:flex; flex-direction:column; gap:12px; align-items:center; }
 
-        /* ── Modal ── */
         .ap-modal-preview { width:100%; height:155px; object-fit:cover; border-radius:12px; margin-bottom:4px; display:block; }
         .ap-modal-chips { display:flex; gap:7px; flex-wrap:wrap; }
         .ap-modal-chip { padding:4px 12px; border-radius:100px; font-size:0.78rem; font-weight:600; }
@@ -572,11 +484,9 @@ export default function Apuntes({ navigate }) {
         .ap-premium-cta {
           background:linear-gradient(135deg,var(--amber),#ef4444);
           border:none; border-radius:9px; padding:9px 22px;
-          color:#fff; font-weight:700; font-size:0.875rem;
-          cursor:pointer; font-family:var(--font-body);
+          color:#fff; font-weight:700; font-size:0.875rem; cursor:pointer; font-family:var(--font-body);
         }
 
-        /* ── Responsive ── */
         @media(max-width:700px){
           .ap-grid { grid-template-columns:1fr 1fr; }
           .ap-filters-row { gap:7px; }
@@ -593,7 +503,6 @@ export default function Apuntes({ navigate }) {
 
       <div className="ap-page page-container">
 
-        {/* Header */}
         <div className="ap-header">
           <div>
             <h1 className="ap-title">Apuntes</h1>
@@ -606,22 +515,33 @@ export default function Apuntes({ navigate }) {
           </div>
         </div>
 
-        {/* Stats bar */}
         <div className="ap-stats-bar">
           <div className="ap-stat-chip">📚 <span>{apuntes.length}</span> apuntes</div>
           <div className="ap-stat-chip">🏫 <span>{facultades.length}</span> facultades</div>
           <div className="ap-stat-chip">🎓 <span>{carreras.length}</span> carreras</div>
-          <div className="ap-stat-chip" style={{ color:"var(--emerald)" }}>
-            ✓ <span style={{ color:"var(--emerald)" }}>{apuntes.filter(a=>!a.premium).length}</span> gratis
+          <div className="ap-stat-chip" style={{ color: "var(--emerald)" }}>
+            ✓ <span style={{ color: "var(--emerald)" }}>{apuntes.filter(a => !a.premium).length}</span> gratis
           </div>
-          <div className="ap-stat-chip" style={{ color:"var(--amber)" }}>
-            ⭐ <span style={{ color:"var(--amber)" }}>{apuntes.filter(a=>a.premium).length}</span> premium
+          <div className="ap-stat-chip" style={{ color: "var(--amber)" }}>
+            ⭐ <span style={{ color: "var(--amber)" }}>{apuntes.filter(a => a.premium).length}</span> premium
           </div>
         </div>
 
-        {/* Filtros */}
+        {/* Banner de filtro activo desde Home */}
+        {(cursoFilter !== "all" || carreraFilter !== "all") && (() => {
+          const cursoActivo   = cursoFilter !== "all"   ? cursos.find(c => String(c.id) === cursoFilter)     : null;
+          const carreraActiva = carreraFilter !== "all" ? carreras.find(c => String(c.id) === carreraFilter) : null;
+          return (
+            <div className="ap-active-filter-banner">
+              <span>🔍 Filtrando por:</span>
+              {cursoActivo   && <strong>📚 {cursoActivo.nombre}</strong>}
+              {carreraActiva && <strong>🎓 {carreraActiva.nombre}</strong>}
+              <button className="ap-clear-filter-btn" onClick={reset}>✕ Quitar filtro</button>
+            </div>
+          );
+        })()}
+
         <div className="ap-filters-wrap">
-          {/* Fila 1: búsqueda + selects */}
           <div className="ap-filters-row">
             <div className="ap-search-wrap">
               <span className="ap-search-icon">🔍</span>
@@ -635,7 +555,7 @@ export default function Apuntes({ navigate }) {
             <select
               className={`ap-select${carreraFilter !== "all" ? " active" : ""}`}
               value={carreraFilter}
-              onChange={e => setCarrera(e.target.value)}
+              onChange={e => { setCarrera(e.target.value); setCurso("all"); }}
             >
               <option value="all">Todas las carreras</option>
               {carrerasFiltradas.map(c => (
@@ -652,18 +572,17 @@ export default function Apuntes({ navigate }) {
                 <option key={c} value={String(c)}>Ciclo {c}</option>
               ))}
             </select>
-            <button className={`ap-toggle${soloGratis ? " on" : ""}`} onClick={() => setSoloGratis(v=>!v)}>
+            <button className={`ap-toggle${soloGratis ? " on" : ""}`} onClick={() => setSoloGratis(v => !v)}>
               {soloGratis ? "✓" : "○"} Solo gratis
             </button>
             {hasFilter && <button className="ap-reset" onClick={reset}>✕ Limpiar</button>}
           </div>
 
-          {/* Fila 2: Facultades */}
           <div className="ap-fac-row">
             <button
               className={`ap-fac-btn${facultadFilter === "all" ? " active" : ""}`}
-              style={facultadFilter === "all" ? { background:"var(--indigo-dim)", color:"var(--indigo-light)", borderColor:"rgba(99,102,241,0.4)" } : {}}
-              onClick={() => { setFacultad("all"); setCarrera("all"); }}
+              style={facultadFilter === "all" ? { background: "var(--indigo-dim)", color: "var(--indigo-light)", borderColor: "rgba(99,102,241,0.4)" } : {}}
+              onClick={() => { setFacultad("all"); setCarrera("all"); setCurso("all"); }}
             >
               Todas
             </button>
@@ -671,8 +590,8 @@ export default function Apuntes({ navigate }) {
               <button
                 key={f.id}
                 className={`ap-fac-btn${facultadFilter === String(f.id) ? " active" : ""}`}
-                style={facultadFilter === String(f.id) ? { background:f.color } : {}}
-                onClick={() => { setFacultad(String(f.id)); setCarrera("all"); }}
+                style={facultadFilter === String(f.id) ? { background: f.color } : {}}
+                onClick={() => { setFacultad(String(f.id)); setCarrera("all"); setCurso("all"); }}
               >
                 {f.icono} {f.nombre.replace("Facultad de ", "").replace("Facultad ", "")}
               </button>
@@ -680,7 +599,6 @@ export default function Apuntes({ navigate }) {
           </div>
         </div>
 
-        {/* Tipo pills */}
         <div className="ap-pills">
           {TIPOS.map(t => (
             <button
@@ -694,7 +612,6 @@ export default function Apuntes({ navigate }) {
           ))}
         </div>
 
-        {/* Toolbar */}
         <div className="ap-toolbar">
           <span className="ap-result-count">
             <strong>{filtered.length}</strong> apunte{filtered.length !== 1 ? "s" : ""} encontrado{filtered.length !== 1 ? "s" : ""}
@@ -703,16 +620,15 @@ export default function Apuntes({ navigate }) {
             {SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
           </select>
           <div className="ap-view-btns">
-            <button className={`ap-view-btn${viewMode==="grid"?" active":""}`} onClick={() => setViewMode("grid")}>⊞</button>
-            <button className={`ap-view-btn${viewMode==="list"?" active":""}`} onClick={() => setViewMode("list")}>☰</button>
+            <button className={`ap-view-btn${viewMode === "grid" ? " active" : ""}`} onClick={() => setViewMode("grid")}>⊞</button>
+            <button className={`ap-view-btn${viewMode === "list" ? " active" : ""}`} onClick={() => setViewMode("list")}>☰</button>
           </div>
         </div>
 
-        {/* Contenido */}
         {filtered.length === 0 ? (
           <div className="ap-empty">
-            <span style={{ fontSize:"2.5rem" }}>📭</span>
-            <p style={{ fontWeight:700, color:"var(--text-secondary)" }}>Sin resultados</p>
+            <span style={{ fontSize: "2.5rem" }}>📭</span>
+            <p style={{ fontWeight: 700, color: "var(--text-secondary)" }}>Sin resultados</p>
             <p>Prueba con otros filtros o términos de búsqueda</p>
             {hasFilter && <button className="ap-reset" onClick={reset}>✕ Limpiar filtros</button>}
           </div>
@@ -734,7 +650,6 @@ export default function Apuntes({ navigate }) {
             })}
           </div>
         ) : (
-          /* Vista lista */
           <div className="ap-list">
             {filtered.map((ap, i) => {
               const curso   = cursos.find(c => c.id === ap.cursoId);
@@ -743,31 +658,31 @@ export default function Apuntes({ navigate }) {
                 <div
                   key={ap.id}
                   className="ap-list-row"
-                  style={{ animationDelay:`${Math.min(i*0.03,0.3)}s` }}
+                  style={{ animationDelay: `${Math.min(i * 0.03, 0.3)}s` }}
                   onClick={() => setModalApunte(ap)}
                 >
                   {ap.previewImg
                     ? <img src={ap.previewImg} alt={ap.titulo} className="ap-list-thumb" loading="lazy" />
-                    : <div className="ap-list-thumb-placeholder">{TIPO_ICON[ap.tipo]||"📄"}</div>
+                    : <div className="ap-list-thumb-placeholder">{TIPO_ICON[ap.tipo] || "📄"}</div>
                   }
                   <div className="ap-list-main">
                     <div className="ap-list-title">{ap.titulo}</div>
                     <div className="ap-list-sub">
                       {curso && <>
-                        <span className="ap-list-dot" style={{ background:curso.color }} />
+                        <span className="ap-list-dot" style={{ background: curso.color }} />
                         {curso.nombre}
-                        {docente && ` · ${docente.nombre.split(" ").slice(0,3).join(" ")}`}
+                        {docente && ` · ${docente.nombre.split(" ").slice(0, 3).join(" ")}`}
                       </>}
                     </div>
                   </div>
                   <div className="ap-list-badge">
                     <span style={{
-                      fontSize:"0.68rem", fontWeight:700, borderRadius:100, padding:"3px 9px",
-                      background:"var(--indigo-dim)", color:"var(--indigo-light)", border:"1px solid rgba(99,102,241,0.3)",
+                      fontSize: "0.68rem", fontWeight: 700, borderRadius: 100, padding: "3px 9px",
+                      background: "var(--indigo-dim)", color: "var(--indigo-light)", border: "1px solid rgba(99,102,241,0.3)",
                     }}>{TIPO_ICON[ap.tipo]} {ap.tipo}</span>
                     {ap.premium && <span style={{
-                      fontSize:"0.68rem", fontWeight:700, borderRadius:100, padding:"3px 9px",
-                      background:"var(--amber-dim)", color:"var(--amber)", border:"1px solid rgba(245,158,11,0.3)",
+                      fontSize: "0.68rem", fontWeight: 700, borderRadius: 100, padding: "3px 9px",
+                      background: "var(--amber-dim)", color: "var(--amber)", border: "1px solid rgba(245,158,11,0.3)",
                     }}>⭐ PRO</span>}
                   </div>
                   <div className="ap-list-stats">
@@ -781,71 +696,61 @@ export default function Apuntes({ navigate }) {
           </div>
         )}
 
-        {/* Modal */}
         <Modal open={!!modalApunte} onClose={() => setModalApunte(null)} title={modalApunte?.titulo}>
           {modalApunte && (
-            <div style={{ display:"flex", flexDirection:"column", gap:16 }}>
-
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               {modalApunte.previewImg && (
                 <img src={modalApunte.previewImg} alt={modalApunte.titulo} className="ap-modal-preview" loading="lazy" />
               )}
-
-              {/* Badges */}
               <div className="ap-modal-chips">
-                <span className="ap-modal-chip" style={{ background:"var(--indigo-dim)", color:"var(--indigo-light)", border:"1px solid rgba(99,102,241,0.3)" }}>
+                <span className="ap-modal-chip" style={{ background: "var(--indigo-dim)", color: "var(--indigo-light)", border: "1px solid rgba(99,102,241,0.3)" }}>
                   {TIPO_ICON[modalApunte.tipo]} {modalApunte.tipo}
                 </span>
                 {modalApunte.premium && (
-                  <span className="ap-modal-chip" style={{ background:"var(--amber-dim)", color:"var(--amber)", border:"1px solid rgba(245,158,11,0.3)" }}>⭐ Premium</span>
+                  <span className="ap-modal-chip" style={{ background: "var(--amber-dim)", color: "var(--amber)", border: "1px solid rgba(245,158,11,0.3)" }}>⭐ Premium</span>
                 )}
                 {modalFac && (
-                  <span className="ap-modal-chip" style={{ background:`${modalFac.color}18`, color:modalFac.color, border:`1px solid ${modalFac.color}35` }}>
-                    {modalFac.icono} {modalFac.nombre.replace("Facultad de ","").replace("Facultad ","")}
+                  <span className="ap-modal-chip" style={{ background: `${modalFac.color}18`, color: modalFac.color, border: `1px solid ${modalFac.color}35` }}>
+                    {modalFac.icono} {modalFac.nombre.replace("Facultad de ", "").replace("Facultad ", "")}
                   </span>
                 )}
                 {modalCurso && (
-                  <span className="ap-modal-chip" style={{ background:`${modalCurso.color}18`, color:modalCurso.color, border:`1px solid ${modalCurso.color}40` }}>
+                  <span className="ap-modal-chip" style={{ background: `${modalCurso.color}18`, color: modalCurso.color, border: `1px solid ${modalCurso.color}40` }}>
                     {modalCurso.codigo}
                   </span>
                 )}
               </div>
-
-              {/* Stats */}
               <div className="ap-stats-row">
-                <span>⬇️ <strong style={{color:"var(--text-secondary)"}}>{modalApunte.descargas.toLocaleString()}</strong></span>
-                <span>❤️ <strong style={{color:"var(--text-secondary)"}}>{modalApunte.likes}</strong></span>
-                <span>👁️ <strong style={{color:"var(--text-secondary)"}}>{(modalApunte.vistas||0).toLocaleString()}</strong></span>
-                <span style={{ marginLeft:"auto", fontSize:"0.76rem", color:"var(--text-muted)" }}>Semana {modalApunte.semana} · {modalApunte.fecha}</span>
+                <span>⬇️ <strong style={{ color: "var(--text-secondary)" }}>{modalApunte.descargas.toLocaleString()}</strong></span>
+                <span>❤️ <strong style={{ color: "var(--text-secondary)" }}>{modalApunte.likes}</strong></span>
+                <span>👁️ <strong style={{ color: "var(--text-secondary)" }}>{(modalApunte.vistas || 0).toLocaleString()}</strong></span>
+                <span style={{ marginLeft: "auto", fontSize: "0.76rem", color: "var(--text-muted)" }}>Semana {modalApunte.semana} · {modalApunte.fecha}</span>
               </div>
-
-              {/* Descripción */}
               {modalApunte.descripcion && (
                 <div className="ap-modal-section">
                   <div className="ap-modal-section-label">Descripción</div>
                   <div className="ap-modal-desc">{modalApunte.descripcion}</div>
                 </div>
               )}
-
-              {/* Info */}
               <div className="ap-modal-section">
                 <div className="ap-modal-section-label">Información</div>
                 <div className="ap-modal-meta-grid">
                   {modalCurso && (
                     <div className="ap-modal-meta-item">
                       <div className="ap-modal-meta-label">Curso</div>
-                      <div className="ap-modal-meta-value" style={{fontSize:"0.78rem"}}>{modalCurso.nombre}</div>
+                      <div className="ap-modal-meta-value" style={{ fontSize: "0.78rem" }}>{modalCurso.nombre}</div>
                     </div>
                   )}
                   {modalCarrera && (
                     <div className="ap-modal-meta-item">
                       <div className="ap-modal-meta-label">Carrera</div>
-                      <div className="ap-modal-meta-value" style={{fontSize:"0.78rem"}}>{modalCarrera.nombre}</div>
+                      <div className="ap-modal-meta-value" style={{ fontSize: "0.78rem" }}>{modalCarrera.nombre}</div>
                     </div>
                   )}
                   {modalDocente && (
                     <div className="ap-modal-meta-item">
                       <div className="ap-modal-meta-label">Docente</div>
-                      <div className="ap-modal-meta-value" style={{fontSize:"0.78rem"}}>{modalDocente.nombre.split(" ").slice(0,3).join(" ")}</div>
+                      <div className="ap-modal-meta-value" style={{ fontSize: "0.78rem" }}>{modalDocente.nombre.split(" ").slice(0, 3).join(" ")}</div>
                     </div>
                   )}
                   {modalCurso && (
@@ -856,8 +761,6 @@ export default function Apuntes({ navigate }) {
                   )}
                 </div>
               </div>
-
-              {/* Temas */}
               {modalApunte.temas?.length > 0 && (
                 <div className="ap-modal-section">
                   <div className="ap-modal-section-label">Temas cubiertos</div>
@@ -866,25 +769,21 @@ export default function Apuntes({ navigate }) {
                   </div>
                 </div>
               )}
-
-              {/* Archivos */}
               {modalApunte.archivos?.length > 0 && (
                 <div className="ap-modal-section">
                   <div className="ap-modal-section-label">
-                    Archivos adjuntos · {modalApunte.archivos.length} {modalApunte.archivos.length===1?"archivo":"archivos"}
+                    Archivos adjuntos · {modalApunte.archivos.length} {modalApunte.archivos.length === 1 ? "archivo" : "archivos"}
                   </div>
                   <div className="ap-archivos-list">
-                    {modalApunte.archivos.map((a,i) => <ArchivoRow key={i} archivo={a} />)}
+                    {modalApunte.archivos.map((a, i) => <ArchivoRow key={i} archivo={a} />)}
                   </div>
                 </div>
               )}
-
-              {/* CTA */}
               {locked ? (
                 <div className="ap-premium-wall">
-                  <span style={{fontSize:"1.6rem"}}>🔒</span>
-                  <p style={{fontWeight:700}}>Contenido exclusivo para Premium</p>
-                  <p style={{fontSize:"0.82rem",color:"var(--text-muted)"}}>Accede a este y todos los apuntes premium por S/. 5/mes</p>
+                  <span style={{ fontSize: "1.6rem" }}>🔒</span>
+                  <p style={{ fontWeight: 700 }}>Contenido exclusivo para Premium</p>
+                  <p style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>Accede a este y todos los apuntes premium por S/. 5/mes</p>
                   <button className="ap-premium-cta" onClick={() => { setModalApunte(null); navigate("planes"); }}>
                     Ver planes →
                   </button>
@@ -893,8 +792,8 @@ export default function Apuntes({ navigate }) {
                 <button
                   className="ap-dl-btn"
                   onClick={() => {
-                    const primerPdf = modalApunte.archivos?.find(a => a.url && a.tipo==="pdf");
-                    if (primerPdf) window.open(primerPdf.url,"_blank","noopener");
+                    const primerPdf = modalApunte.archivos?.find(a => a.url && a.tipo === "pdf");
+                    if (primerPdf) window.open(primerPdf.url, "_blank", "noopener");
                     else setToast(modalApunte.titulo);
                   }}
                 >
