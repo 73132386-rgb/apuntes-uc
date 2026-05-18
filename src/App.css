@@ -1,0 +1,22 @@
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-body {
+  flex: 1;
+  display: flex;
+  padding-top: 64px;
+}
+
+/* ❌ ELIMINADO: margin-left en app-main
+   El sidebar-wrap ya empuja el contenido con su width animada (flex layout).
+   Usar margin-left al mismo tiempo duplicaba el desplazamiento. */
+
+.app-main {
+  flex: 1;
+  min-width: 0;
+  padding: 36px 0 60px;
+  /* Sin margin-left ni transition aquí — el sidebar-wrap lo maneja */
+}
